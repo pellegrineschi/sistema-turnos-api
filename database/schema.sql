@@ -14,3 +14,22 @@ CREATE TABLE turnos (
     estado VARCHAR(20) DEFAULT 'activo',
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE profesionales (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    especialidad VARCHAR(100),
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE turnos
+ADD COLUMN profesional_id INTEGER;
+
+ALTER TABLE turnos
+ADD CONSTRAINT fk_profesional
+FOREIGN KEY (profesional_id)
+REFERENCES profesionales(id);
+
+ALTER TABLE turnos
+ADD CONSTRAINT turno_unico
+UNIQUE (profesional_id, fecha_hora);
