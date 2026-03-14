@@ -1,0 +1,16 @@
+CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    rol VARCHAR(20) DEFAULT 'user',
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE turnos (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER REFERENCES usuarios(id),
+    fecha_hora TIMESTAMP NOT NULL,
+    estado VARCHAR(20) DEFAULT 'activo',
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
