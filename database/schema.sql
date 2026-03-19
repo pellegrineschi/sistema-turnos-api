@@ -1,3 +1,6 @@
+-- =========================
+-- TABLA USUARIOS
+-- =========================
 CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -7,14 +10,9 @@ CREATE TABLE usuarios (
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE turnos (
-    id SERIAL PRIMARY KEY,
-    usuario_id INTEGER REFERENCES usuarios(id),
-    fecha_hora TIMESTAMP NOT NULL,
-    estado VARCHAR(20) DEFAULT 'activo',
-    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
+-- =========================
+-- TABLA PROFESIONALES
+-- =========================
 CREATE TABLE profesionales (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -22,14 +20,21 @@ CREATE TABLE profesionales (
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-ALTER TABLE turnos
-ADD COLUMN profesional_id INTEGER;
+-- =========================
+-- TABLA TURNOS
+-- =========================
+CREATE TABLE turnos (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER REFERENCES usuarios(id),
+    profesional_id INTEGER REFERENCES profesionales(id),
+    fecha_hora TIMESTAMP NOT NULL,
+    estado VARCHAR(20) DEFAULT 'activo',
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-ALTER TABLE turnos
-ADD CONSTRAINT fk_profesional
-FOREIGN KEY (profesional_id)
-REFERENCES profesionales(id);
-
-ALTER TABLE turnos
-ADD CONSTRAINT turno_unico
-UNIQUE (profesional_id, fecha_hora);
+-- =========================
+-- INDICE UNICO PARCIAL (CLAVE)
+-- =========================
+CREATE UNIQUE INDEX turno_unico_activo
+ON turnos (profesional_id, fecha_hora)
+WHERE estado = 'activo';
