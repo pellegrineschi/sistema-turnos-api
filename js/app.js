@@ -42,7 +42,7 @@ function reservarTurno(hora) {
 
   const datos = {
     usuario_id: 1,
-    profesional_id: 1,
+    profesional_id: document.getElementById("profesional").value,
     fecha_hora: `2026-03-25 ${hora}:00`,      
   };
 
@@ -67,4 +67,32 @@ function reservarTurno(hora) {
     .catch((error) => {
       console.error("Error al reservar turno:", error);
     });
+}
+
+function cargarProfesionales(){
+
+  fetch("http://localhost/sistema-turnos-api/api/profesionales/listar.php")
+
+  .then((response)=> response.json())
+  
+  .then(data=>{
+    console.log(data);
+    const select = document.getElementById("profesional");
+    select.innerHTML= "";
+
+    data.forEach( prof => {
+      const option = document.createElement("option");
+      option.value = prof.id;
+      option.textContent =  prof.nombre + " - " + prof.especialidad;
+
+      select.appendChild(option);
+    })
+  })
+  .catch(error => {
+    console.error("Error al cargar profesionales:", error);
+  })
+}
+
+window.onload = function() {
+  cargarProfesionales();
 }
